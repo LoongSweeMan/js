@@ -134,6 +134,17 @@ this.anims.create({
         this.bat3 = this.physics.add.sprite(664, 429, 'bat3').play('batfront');
         this.bat4 = this.physics.add.sprite(878, 234, 'bat4').play('batside');
 
+        //create the poison sprite
+        this.poison1 = this.physics.add.sprite(298, 592, 'poison32');
+        this.poison2 = this.physics.add.sprite(443, 592, 'poison32');
+        this.poison3 = this.physics.add.sprite(864, 349, 'poison32');
+
+        //hit poison
+        this.physics.add.overlap(this.player, this.poison1, this.poisonOverlap, null, this);
+        this.physics.add.overlap(this.player, this.poison2, this.poisonOverlap, null, this);
+        this.physics.add.overlap(this.player, this.poison3, this.poisonOverlap, null, this);
+        
+
         //hit enemy
         this.physics.add.overlap(this.player, this.ghost1, this.ghostfrontOverlap, null, this);
         this.physics.add.overlap(this.player, this.ghost2, this.ghostsideOverlap, null, this);
@@ -345,6 +356,11 @@ moveUpDown3() {
     }
 
     batsideOverlap() {
+      console.log( "batsideoverlap player");
+      this.scene.start("gameover");
+  }
+
+    poisonOverlap() {
       console.log( "batsideoverlap player");
       this.scene.start("gameover");
   }
