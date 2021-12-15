@@ -35,8 +35,8 @@ class gameplay extends Phaser.Scene {
       spaceDown.on(
         "down",
         function () {
-          console.log("Jump to rules scene");
-          this.scene.start( "rules");
+          console.log("Jump to charactor scene");
+          this.scene.start( "charactor");
         },
         this
       );

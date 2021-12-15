@@ -18,6 +18,8 @@ class gameover extends Phaser.Scene {
     create() {
         console.log("*** gameover");
 
+        window.heart=3
+
         window.music.stop();
 
         this.music = this.sound.add("gameover", {

@@ -39,10 +39,10 @@ class world extends Phaser.Scene {
 
 
     //background_sound
-    window.music = this.sound
-    .add("bgmusic", {
-   loop: true,
-   }).setVolume(0.3);window.music.play();
+  //   window.music = this.sound
+  //   .add("bgmusic", {
+  //  loop: true,
+  //  }).setVolume(0.3);window.music.play();
 
    //collectsound
    this.collectsound = this.sound.add("collect");
@@ -182,7 +182,6 @@ class world extends Phaser.Scene {
     this.player.y < 957
   ) {
     this.room1()
-    window.music.stop();
   }
 
   if(
@@ -192,7 +191,6 @@ class world extends Phaser.Scene {
     this.player.y < 433
   ) {
     this.room2()
-    window.music.stop();
   }
 
   if(
@@ -202,7 +200,6 @@ class world extends Phaser.Scene {
     this.player.y < 241
   ) {
     this.room3()
-    window.music.stop();
   }
 
   if(
@@ -269,23 +266,41 @@ class world extends Phaser.Scene {
     this.scene.start("room3", {playerPos: playerPos, score : this.score});
   }
 
-        // Function hit ghost
-        ghostOverlap(player,ghost) {
-          console.log( "ghost overlap player");
-                  window.heart--;
-  
-           if (window.heart == 2) {
-           this.heart3.setVisible(false);
-         } else if (window.heart == 1) {
-           this.heart2.setVisible(false);
-         } else if (window.heart == 0) {
-           this.heart1.setVisible(false);
-           console.log("you are dead");
-           this.scene.start("gameover");
-         }
-      ghost.disableBody (true, true);
-      // this.hitSound.play();
-      this.cameras.main.shake(200);
-        }
+      // Function hit ghost and bat
+      ghostOverlap(player,ghost) {
+        console.log( "ghost overlap player");
+                window.heart--;
+
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    ghost.disableBody (true, true);
+    this.hitsound.play();
+    this.cameras.main.shake(200);
+      }
+
+      batOverlap(player,bat) {
+        console.log( "bat overlap player");
+                window.heart--;
+
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    bat.disableBody (true, true);
+    this.hitsound.play();
+    this.cameras.main.shake(200);
+      }
 
 } //////////// end of class world ////////////////////////

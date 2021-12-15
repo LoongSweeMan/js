@@ -44,12 +44,12 @@ class room1 extends Phaser.Scene {
 //    loop: true,
 //    }).setVolume(0.3);window.music.play();
 
-window.music.stop();
+// window.music.stop();
 
-window.music = this.sound
-    .add("bgmusic", {
-   loop: true,
-   }).setVolume(0.3);window.music.play();
+// window.music = this.sound
+//     .add("bgmusic", {
+//    loop: true,
+//    }).setVolume(0.3);window.music.play();
 
    //collectsound
    this.collectsound = this.sound.add("collect");
@@ -108,11 +108,6 @@ window.music = this.sound
         this.time.addEvent({ delay: 0, callback: this.moveUpDown, callbackScope: this, loop: false });
 
 
-        // this.item = map.findObject("itemLayer", obj => obj.name === "item");
-        // this.pumpkin2 = map.findObject("objectLayer", obj => obj.name === "pumpkin2");
-        // this.pumpkin3 = map.findObject("objectLayer", obj => obj.name === "pumpkin3");
-        // this.pumpkin4 = map.findObject("objectLayer", obj => obj.name === "pumpkin4");
-        // this.pumpkin5 = map.findObject("objectLayer", obj => obj.name === "pumpkin5");
         this.ghost1 = map.findObject("objectLayer", obj => obj.name === "ghost1");
         this.ghost2 = map.findObject("objectLayer", obj => obj.name === "ghost2");
         this.ghost3 = map.findObject("objectLayer", obj => obj.name === "ghost3");
@@ -341,7 +336,7 @@ window.music = this.sound
           this.scene.start("world", {playerPos: playerPos, score : this.score});
         }
 
-      // Function hit ghost
+      // Function hit ghost and bat
       ghostOverlap(player,ghost) {
         console.log( "ghost overlap player");
                 window.heart--;
@@ -360,52 +355,23 @@ window.music = this.sound
     this.cameras.main.shake(200);
       }
 
+      batOverlap(player,bat) {
+        console.log( "bat overlap player");
+                window.heart--;
 
-        // Function hit ghost
-//       ghostfrontOverlap(player,ghost) {
-//         console.log( "deduct life");
-//         console.log( "ghost overlap player");
-
-//         window.heart--;
-
-//          if (window.heart == 2) {
-//          this.heart3.setVisible(false);
-//        } else if (window.heart == 1) {
-//          this.heart2.setVisible(false);
-//        } else if (window.heart == 0) {
-//          this.heart1.setVisible(false);
-//          console.log("you are dead");
-//          this.scene.start("gameover");
-//        }
-//     ghost.disableBody (true, true);
-//     // this.hitSound.play();
-//     this.cameras.main.shake(200);
-// }
-        
-  //     }
-
-//       ghostsideOverlap() {
-//         console.log( "deduct life");
-//         console.log( "ghostsideoverlap player");
-
-//         window.heart--;
-
-//       if (window.heart == 3) {
-//         this.heart4.setVisible(false);
-//      } else if (window.heart == 2) {
-//        this.heart3.setVisible(false);
-//      } else if (window.heart == 1) {
-//        this.heart2.setVisible(false);
-//      } else if (window.heart == 0) {
-//        this.heart1.setVisible(false);
-//        console.log("you are dead");
-//        this.scene.start("gameover");
-//      }
-//   enemy.disableBody (true, true);
-//   // this.hitSound.play();
-//   this.cameras.main.shake(200);
-// }
-
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    bat.disableBody (true, true);
+    this.hitsound.play();
+    this.cameras.main.shake(200);
+      }
 
 
       collectItem (player,item)

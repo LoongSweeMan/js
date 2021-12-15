@@ -44,6 +44,11 @@ class preload extends Phaser.Scene {
   create() {
     console.log("*** preload scene");
 
+    window.music = this.sound
+    .add("bgmusic", {
+   loop: true,
+   }).setVolume(0.2);window.music.play();
+
     // window.music.stop();
 
     this.add.image(0,0,'intro').setOrigin(0,0);
@@ -96,54 +101,6 @@ class preload extends Phaser.Scene {
     frameRate: 8,
     repeat: -1
 })
-
-// this.anims.create({
-//   key: 'batfront',
-//   frames: [
-//     {key:'batfront',frame:'animation-17'},
-//     {key:'batfront',frame:'animation-18'},
-//     {key:'batfront',frame:'animation-19'},
-//     {key:'batfront',frame:'animation-20'},
-//   ],
-//   frameRate: 8,
-//   repeat: -1
-// })
-
-// this.anims.create({
-//   key: 'batside',
-//   frames: [
-//     {key:'batside',frame:'animation-29'},
-//     {key:'batside',frame:'animation-30'},
-//     {key:'batside',frame:'animation-31'},
-//     {key:'batside',frame:'animation-32'},
-//   ],
-//   frameRate: 8,
-//   repeat: -1
-// })
-
-// this.anims.create({
-//   key: 'ghostfront',
-//   frames: [
-//     {key:'ghostfront',frame:'animation-41'},
-//     {key:'ghostfront',frame:'animation-42'},
-//     {key:'ghostfront',frame:'animation-43'},
-//     {key:'ghostfront',frame:'animation-44'},
-//   ],
-//   frameRate: 8,
-//   repeat: -1
-// })
-
-// this.anims.create({
-//   key: 'ghostside',
-//   frames: [
-//     {key:'ghostside',frame:'animation-33'},
-//     {key:'ghostside',frame:'animation-34'},
-//     {key:'ghostside',frame:'animation-35'},
-//     {key:'ghostside',frame:'animation-36'},
-//   ],
-//   frameRate: 8,
-//   repeat: -1
-// })
 
 
     // Add any sound and music here

@@ -7,7 +7,7 @@
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            debug: false
         }
     },
     scale: {
@@ -16,7 +16,7 @@
     },
     backgroundColor: '#000000',
     pixelArt: true,
-    scene: [preload, storyline, gameplay, rules, winscene, charactor, collectables, world, gameover, room1, room2, room3]
+    scene: [preload, storyline, gameplay, winscene, charactor, collectables, world, gameover, room1, room2, room3]
 };
 
 var game = new Phaser.Game(config);

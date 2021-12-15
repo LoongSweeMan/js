@@ -43,12 +43,7 @@ class room2 extends Phaser.Scene {
 //    loop: true,
 //    }).setVolume(0.3);window.music.play();
 
-window.music.stop();
-
-window.music = this.sound
-    .add("bgmusic", {
-   loop: true,
-   }).setVolume(0.3);window.music.play();
+// window.music.stop();
 
    //collectsound
    this.collectsound = this.sound.add("collect");

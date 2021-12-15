@@ -18,7 +18,9 @@ class winscene extends Phaser.Scene {
     create() {
         console.log("*** win");
 
-        // window.music.stop();
+        window.heart=3
+
+        window.music.stop();
 
         this.music = this.sound.add("win", {
        loop: true,
@@ -46,14 +48,8 @@ class winscene extends Phaser.Scene {
         spaceDown.on(
           "down",
           function () {
-            console.log("Jump to world scene");
-    
-            let playerPos = {};
-            playerPos.x = 1108;
-            playerPos.y = 1193;
-            playerPos.dir = "up";
-
-            this.scene.start("world", { playerPos: playerPos });
+            console.log("Jump to preload");
+            this.scene.start( "preload");
             this.music.stop();
           },
           this
