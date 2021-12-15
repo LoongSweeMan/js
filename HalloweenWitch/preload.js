@@ -43,6 +43,9 @@ class preload extends Phaser.Scene {
 
   create() {
     console.log("*** preload scene");
+
+    // window.music.stop();
+
     this.add.image(0,0,'intro').setOrigin(0,0);
     console.log("This is intro")
 

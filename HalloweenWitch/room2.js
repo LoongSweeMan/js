@@ -43,8 +43,17 @@ class room2 extends Phaser.Scene {
 //    loop: true,
 //    }).setVolume(0.3);window.music.play();
 
+window.music.stop();
+
+window.music = this.sound
+    .add("bgmusic", {
+   loop: true,
+   }).setVolume(0.3);window.music.play();
+
    //collectsound
    this.collectsound = this.sound.add("collect");
+
+   this.hitsound = this.sound.add("hit");
 
       this.anims.create({
         key: 'ghostfront',
@@ -386,7 +395,7 @@ moveUpDown3() {
          this.scene.start("gameover");
        }
     ghost.disableBody (true, true);
-    // this.hitSound.play();
+    this.hitsound.play();
     this.cameras.main.shake(200);
       }
 
@@ -404,7 +413,7 @@ moveUpDown3() {
          this.scene.start("gameover");
        }
     bat.disableBody (true, true);
-    // this.hitSound.play();
+    this.hitsound.play();
     this.cameras.main.shake(200);
       }
 

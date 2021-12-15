@@ -18,7 +18,7 @@ class winscene extends Phaser.Scene {
     create() {
         console.log("*** win");
 
-        window.music.stop();
+        // window.music.stop();
 
         this.music = this.sound.add("win", {
        loop: true,
@@ -52,8 +52,7 @@ class winscene extends Phaser.Scene {
             playerPos.x = 1108;
             playerPos.y = 1193;
             playerPos.dir = "up";
-            
-       
+
             this.scene.start("world", { playerPos: playerPos });
             this.music.stop();
           },
