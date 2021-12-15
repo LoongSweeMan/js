@@ -9,10 +9,13 @@ class room1 extends Phaser.Scene {
 
     init(data) {
         this.playerPos = data.playerPos;
+        this.score = data.score;
+
 
     }
 
     preload() {
+      console.log("life: ", window.heart);
 
     // Step 1, load JSON
     this.load.tilemapTiledJSON("room1","assets/palace.json");
@@ -21,8 +24,8 @@ class room1 extends Phaser.Scene {
     this.load.image("decoration32", "assets/decoration.png");
     this.load.image("pipoya32", "assets/pipoya.png");
     this.load.image("scenery32", "assets/Scenery.png");
-    this.load.image("item32", "assets/item.png");
-    // this.load.image("heart", "assets/heart.png");
+    this.load.image("pumpkin", "assets/pumpkin.png");
+    this.load.image("heart", "assets/heart.png");
 
     this.load.atlas('batfront', 'assets/bat-front.png', 'assets/bat-front.json');
     this.load.atlas('batside', 'assets/bat-side.png', 'assets/bat-side.json');
@@ -32,6 +35,21 @@ class room1 extends Phaser.Scene {
     }
 
     create() {
+
+      console.log("life: ", window.heart);
+
+//      //background_sound
+//     window.music = this.sound
+//     .add("bgmusic", {
+//    loop: true,
+//    }).setVolume(0.3);window.music.play();
+
+   //collectsound
+   this.collectsound = this.sound.add("collect");
+
+    //hitsound
+    this.hitsound = this.sound.add("hit");
+
       this.anims.create({
         key: 'ghostfront',
         frames: [
@@ -59,22 +77,22 @@ class room1 extends Phaser.Scene {
 
         console.log('*** room1 scene');
 
+
         let map = this.make.tilemap({key:"room1"});
 
         let decorationTiles = map.addTilesetImage("decoration", "decoration32");
         let pipoyaTiles = map.addTilesetImage("pipoya", "pipoya32");
         let sceneryTiles = map.addTilesetImage("Scenery", "scenery32");
-        let itemTiles = map.addTilesetImage("item", "item32");
 
-        let tileArray = [decorationTiles, pipoyaTiles, sceneryTiles, itemTiles]
+        let tileArray = [decorationTiles, pipoyaTiles, sceneryTiles]
 
         this.groundLayer = map.createLayer("ground", tileArray, 0, 0);
         this.fenceLayer = map.createLayer("fence", tileArray, 0, 0);
         this.obstacleLayer = map.createLayer("obstacle", tileArray, 0, 0);
-        this.itemLayer = map.createLayer("itemLayer", tileArray, 0, 0);
 
         this.physics.world.bounds.width = this.groundLayer.width;
         this.physics.world.bounds.height = this.groundLayer.height;
+
 
 
         this.time.addEvent({ delay: 1000, callback: this.moveLeftRight, callbackScope: this, loop: false });
@@ -102,6 +120,7 @@ class room1 extends Phaser.Scene {
         );
       
         window.player = this.player;
+        window.score = this.score;
 
          // create the enemy sprite
          this.ghost1 = this.physics.add.sprite(this.ghost1.x, this.ghost1.y, 'ghost1').play('ghostfront');
@@ -110,39 +129,60 @@ class room1 extends Phaser.Scene {
          this.ghost4 = this.physics.add.sprite(this.ghost4.x, this.ghost4.y, 'ghost4').play('ghostside');
 
         //  //create the collectable sprite
-        //  this.pumpkin1 = this.physics.add.sprite(this.pumpkin1.x, this.pumpkin1.y, 'pumpkin'); 
-        //  this.pumpkin2 = this.physics.add.sprite(this.pumpkin2.x, this.pumpkin2.y, 'pumpkin');
-        //  this.pumpkin3 = this.physics.add.sprite(this.pumpkin3.x, this.pumpkin3.y, 'pumpkin');
-        //  this.pumpkin4 = this.physics.add.sprite(this.pumpkin4.x, this.pumpkin4.y, 'pumpkin');
-        //  this.pumpkin5 = this.physics.add.sprite(this.pumpkin5.x, this.pumpkin5.y, 'pumpkin');
+         this.pumpkin1 = this.physics.add.sprite(337, 910, 'pumpkin'); 
+         this.pumpkin2 = this.physics.add.sprite(336, 496, 'pumpkin');
+         this.pumpkin3 = this.physics.add.sprite(78, 299, 'pumpkin');
+         this.pumpkin4 = this.physics.add.sprite(591, 302, 'pumpkin');
+         this.pumpkin5 = this.physics.add.sprite(77, 78, 'pumpkin');
 
-
-         //hearts
-        //  this.heart1 = this.add.image(50, 30, 'heart').setScrollFactor(0);
-        //  this.heart2 = this.add.image(100, 30, 'heart').setScrollFactor(0);
-        //  this.heart3 = this.add.image(150, 30, 'heart').setScrollFactor(0);
 
          //hit enemy
-         this.physics.add.overlap(this.player, this.ghost1, this.ghostfrontOverlap, null, this);
-         this.physics.add.overlap(this.player, this.ghost2, this.ghostsideOverlap, null, this);
-         this.physics.add.overlap(this.player, this.ghost3, this.ghostsideOverlap, null, this);
-         this.physics.add.overlap(this.player, this.ghost4, this.ghostsideOverlap, null, this);
+         this.physics.add.overlap(this.player, this.ghost1, this.ghostOverlap, null, this);
+         this.physics.add.overlap(this.player, this.ghost2, this.ghostOverlap, null, this);
+         this.physics.add.overlap(this.player, this.ghost3, this.ghostOverlap, null, this);
+         this.physics.add.overlap(this.player, this.ghost4, this.ghostOverlap, null, this);
 
 
          //hit collectable
-        //  this.physics.add.overlap(this.player, 1, this.collectItem, null, this);
-        //  this.physics.add.overlap(this.player, this.pumpkin2, this.collectItem, null, this);
-        //  this.physics.add.overlap(this.player, this.pumpkin3, this.collectItem, null, this);
-        //  this.physics.add.overlap(this.player, this.pumpkin4, this.collectItem, null, this);
-        //  this.physics.add.overlap(this.player, this.pumpkin5, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin1, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin2, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin3, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin4, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin5, this.collectItem, null, this);
 
-        this.itemLayer.setTileIndexCallback(1, this.removeItem, this);
 
 
          //hit poison
       
       
         this.player.setCollideWorldBounds(true);
+
+        //hearts
+        this.heart1 = this.add
+        .image(30, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart2 = this.add
+        .image(70, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart3 = this.add
+        .image(110, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+
+      if (window.heart >= 3) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+        this.heart3.setVisible(true);
+      } 
+       else if (window.heart == 2) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+      } 
+       else if (window.heart == 1) {
+        this.heart1.setVisible(true);
+      } 
       
           // create the arrow keys
           this.cursors = this.input.keyboard.createCursorKeys();
@@ -155,7 +195,10 @@ class room1 extends Phaser.Scene {
       
           this.physics.add.collider(this.player, this.fenceLayer)
           this.physics.add.collider(this.player, this.obstacleLayer)
-          this.physics.add.collider(this.itemLayer, this.player)
+
+          console.log('item: ', window.score);
+
+          // this.scoreText = this.add.text(30, 440, window.score , {fontSize: '25px', fill: '#ffffff' }).setScrollFactor(0);  
         
     }
 
@@ -173,7 +216,7 @@ class room1 extends Phaser.Scene {
           this.player.x > 432 &&
           this.player.x < 526 &&
           this.player.y > 16  &&
-          this.player.y < 17
+          this.player.y < 17  
       ) {
           this.world();
       }
@@ -199,6 +242,8 @@ class room1 extends Phaser.Scene {
         }
 
     }
+
+
         //end of update
 
         moveUpDown() {
@@ -272,42 +317,11 @@ class room1 extends Phaser.Scene {
           });
       }
 
-      // //hit enemies
-      // ghostfrontOverlap () {
-      //   console.log("ghostfront overlap player"); {
-      //   objectLayer.disableBody(true, true);
-      //   // this.boomSnd.play();
-      //   console.log(this.lifeCount);
-      //   this.liveCount -= 1;
-      //   this.cameras.main.shake(100);}
 
-      //3 life
-      //   if ( this.liveCount === 2) {
-      //     this.cameras.main.shake(100);
-      //     this.hitSnd.play();
-      //     this.heart3.setVisible(false);
-      //   } else if ( this.liveCount === 1) {
-      //     this.hitSnd.play();
-      //     this.cameras.main.shake(100);
-      //     this.heart2.setVisible(false);
-      //   } else if ( this.liveCount === 0) {
-      //   this.hitSnd.play();
-      //     this.cameras.main.shake(500);
-      //     this.heart1.setVisible(false);
-      //     this.isDead = true;
-      //     }
-      // } 
-
-    //   if ( this.lifeCount === 0 ) {
-    //     // delay 1 sec
-    //     this.time.delayedCall(1000,function() {
-          // // Reset counter before a restart
-          // this.isDead = false;
-          // this.life = 3;
-          // this.scene.stop("room1");
-          // // // this.backgroundMusicSnd.stop();
-          // this.scene.start("preload");
-    // } 
+        // winRoom(){
+        //   console.log("Win");
+        //   this.scene.start("world");
+        // }
 
 
         world(player, tile) {
@@ -317,55 +331,92 @@ class room1 extends Phaser.Scene {
           playerPos.y = 977;
           playerPos.dir = "down";
       
-          this.scene.start("world", {playerPos: playerPos});
+          this.scene.start("world", {playerPos: playerPos, score : this.score});
         }
 
+      // Function hit ghost
+      ghostOverlap(player,ghost) {
+        console.log( "ghost overlap player");
+                window.heart--;
+
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    ghost.disableBody (true, true);
+    this.hitsound.play();
+    this.cameras.main.shake(200);
+      }
+
+
         // Function hit ghost
-      ghostfrontOverlap() {
-        console.log( "ghostfront overlap player");
-        this.scene.start("gameover");
+//       ghostfrontOverlap(player,ghost) {
+//         console.log( "deduct life");
+//         console.log( "ghost overlap player");
+
+//         window.heart--;
+
+//          if (window.heart == 2) {
+//          this.heart3.setVisible(false);
+//        } else if (window.heart == 1) {
+//          this.heart2.setVisible(false);
+//        } else if (window.heart == 0) {
+//          this.heart1.setVisible(false);
+//          console.log("you are dead");
+//          this.scene.start("gameover");
+//        }
+//     ghost.disableBody (true, true);
+//     // this.hitSound.play();
+//     this.cameras.main.shake(200);
+// }
+        
+  //     }
+
+//       ghostsideOverlap() {
+//         console.log( "deduct life");
+//         console.log( "ghostsideoverlap player");
+
+//         window.heart--;
+
+//       if (window.heart == 3) {
+//         this.heart4.setVisible(false);
+//      } else if (window.heart == 2) {
+//        this.heart3.setVisible(false);
+//      } else if (window.heart == 1) {
+//        this.heart2.setVisible(false);
+//      } else if (window.heart == 0) {
+//        this.heart1.setVisible(false);
+//        console.log("you are dead");
+//        this.scene.start("gameover");
+//      }
+//   enemy.disableBody (true, true);
+//   // this.hitSound.play();
+//   this.cameras.main.shake(200);
+// }
+
+
+
+      collectItem (player,item)
+      {
+      console.log("item collected");
+      item.disableBody(true,true);
+      this.collectsound.play();
+      
+      // window.score++; // add 10 points to the score
+
+      // this.scoreText.setText('item: ' + window.score);
+
+      return false;
+
       }
 
-      ghostsideOverlap() {
-          console.log( "ghostsideoverlap player");
-          this.scene.start("gameover");
-      }
-
-    //   itemOverlap() {
-    //     console.log( "itemoverlap player");
-    //     item.disableBody(true, true);    
-    // }
-
-      // collectItem(player, item) {
-      //   item.disableBody(true, true);
-      //   this.bingSnd.play();
-      //   console.log(this.lifeCount);
-      //   this.lifeCount += 1; 
-      //   if ( this.lifeCount === 3) {
-      //       this.cameras.main.shake(50);
-      //       // this.life3.setVisible(true);
-      //   } else if ( this.lifeCount === 2) {
-      //       this.cameras.main.shake(50);
-      //       // this.life2.setVisible(true);
-      //   } else if ( this.lifeCount === 1) {
-      //       this.cameras.main.shake(50);
-      //       // this.life1.setVisible(true);
-      //   }
-      //   return false;
-      //   }
-
-
-      // removeitem
-      removeItem(player, item) {
-        console.log('hit item', item.index );
-        if (item.index !== 1) return;
-        this.itemLayer.removeTileAt(item.x, item.y); // remove the item
-
-        return false;
-    }
 
 
 
 
-
-    }
+   }

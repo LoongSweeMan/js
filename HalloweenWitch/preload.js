@@ -10,6 +10,18 @@ class preload extends Phaser.Scene {
     
 
   preload() {
+    //heart
+    this.load.image('heart', 'assets/heart.png');
+
+
+    //sound
+   
+     this.load.audio('gameover', 'assets/gameoverbgm.mp3');
+     this.load.audio('hit', 'assets/hitsound.wav');
+     this.load.audio('win', 'assets/winbgm.wav');
+     this.load.audio('collect', 'assets/collectsound.mp3');
+     this.load.audio("bgmusic","assets/bgmusic.mp3");
+
     // intro
     this.load.image('intro', 'assets/introscene.png');
 
@@ -143,20 +155,42 @@ class preload extends Phaser.Scene {
 
     // Check for spacebar or any key here
     var spaceDown = this.input.keyboard.addKey("SPACE");
+    var key1 = this.input.keyboard.addKey(49);
 
     // On spacebar event, call the world scene
+    // spaceDown.on(
+    //   "down",
+    //   function () {
+    //     console.log("Jump to world scene");
+    //     let playerPos = {};
+    //     playerPos.x = 1108;
+    //     playerPos.y = 1193;
+    //     playerPos.dir = "up";
+    
+    //     this.scene.start("world", { playerPos: playerPos });
+    //   },
+    //   this
+    // );
+
     spaceDown.on(
       "down",
       function () {
-        console.log("Jump to world scene");
-        let playerPos = {};
-        playerPos.x = 1108;
-        playerPos.y = 1193;
-        playerPos.dir = "up";
-    
-        this.scene.start("world", { playerPos: playerPos });
+        console.log("Jump to storyline scene");
+        this.scene.start( "storyline");
       },
       this
+    );
+
+    key1.on("down", function () {
+      console.log("Jump to world scene");
+      let playerPos = {};
+      playerPos.x = 1108;
+      playerPos.y = 1193;
+      playerPos.dir = "up";
+  
+      this.scene.start("world", { playerPos: playerPos });
+    },
+    this
     );
 
     // Add any text in the main page

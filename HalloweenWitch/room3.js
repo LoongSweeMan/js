@@ -9,6 +9,7 @@ class room3 extends Phaser.Scene {
 
     init(data) {
         this.playerPos = data.playerPos;
+        this.score = data.score;
     }
 
     preload() {
@@ -21,7 +22,9 @@ class room3 extends Phaser.Scene {
     this.load.image("pipoya32", "assets/pipoya.png");
     this.load.image("scenery32", "assets/Scenery.png");
     this.load.image("grass32", "assets/grass.png");
-    this.load.image("item32", "assets/item.png");
+    this.load.image("pumpkin", "assets/pumpkin.png");
+    this.load.image("sweet", "assets/sweet.png");
+    this.load.image("heart", "assets/heart.png");
     this.load.image("poison32", "assets/poison.png");
 
 
@@ -33,6 +36,15 @@ class room3 extends Phaser.Scene {
     }
 
     create() {
+
+     //background_sound
+//     window.music = this.sound
+//     .add("bgmusic", {
+//    loop: true,
+//    }).setVolume(0.3);window.music.play();
+
+//collectsound
+this.collectsound = this.sound.add("collect");
 
       this.anims.create({
         key: 'ghostfront',
@@ -91,14 +103,12 @@ this.anims.create({
         let pipoyaTiles = map.addTilesetImage("pipoya", "pipoya32");
         let sceneryTiles = map.addTilesetImage("Scenery", "scenery32");
         let grassTiles = map.addTilesetImage("grass", "grass32");
-        let itemTiles = map.addTilesetImage("item", "item32");
 
-        let tileArray = [decorationTiles, pipoyaTiles, sceneryTiles, grassTiles, itemTiles]
+        let tileArray = [decorationTiles, pipoyaTiles, sceneryTiles, grassTiles]
 
         this.groundLayer = map.createLayer("ground", tileArray, 0, 0);
         this.fenceLayer = map.createLayer("fence", tileArray, 0, 0);
         this.obstacleLayer = map.createLayer("obstacle", tileArray, 0, 0);
-        this.itemLayer = map.createLayer("itemLayer", tileArray, 0, 0);
 
         this.physics.world.bounds.width = this.groundLayer.width;
         this.physics.world.bounds.height = this.groundLayer.height;
@@ -116,6 +126,7 @@ this.anims.create({
         this.bat2 = map.findObject("objectLayer", obj => obj.name === "bat2");
         this.bat3 = map.findObject("objectLayer", obj => obj.name === "bat3");
         this.bat4 = map.findObject("objectLayer", obj => obj.name === "bat4");
+        this.bat5 = map.findObject("objectLayer", obj => obj.name === "bat5");
       
         this.player = this.physics.add.sprite(
           this.playerPos.x,
@@ -124,6 +135,7 @@ this.anims.create({
         );
       
         window.player = this.player;
+        window.score = this.score;
 
 
         // create the enemy sprite
@@ -133,6 +145,15 @@ this.anims.create({
         this.bat2 = this.physics.add.sprite(301, 341, 'bat2').play('batfront');
         this.bat3 = this.physics.add.sprite(664, 429, 'bat3').play('batfront');
         this.bat4 = this.physics.add.sprite(878, 234, 'bat4').play('batside');
+        this.bat5 = this.physics.add.sprite(878, 234, 'bat4').play('batside');
+
+         //  //create the collectable sprite
+         this.pumpkin1 = this.physics.add.sprite(80, 77, 'pumpkin'); 
+         this.pumpkin2 = this.physics.add.sprite(688, 80, 'pumpkin');
+         this.pumpkin3 = this.physics.add.sprite(814, 304, 'pumpkin');
+         this.pumpkin4 = this.physics.add.sprite(848, 80, 'pumpkin');
+         this.sweet1 = this.physics.add.sprite(430, 237, 'sweet');
+         this.sweet2 = this.physics.add.sprite(365, 592, 'sweet');
 
         //create the poison sprite
         this.poison1 = this.physics.add.sprite(298, 592, 'poison32');
@@ -146,19 +167,52 @@ this.anims.create({
         
 
         //hit enemy
-        this.physics.add.overlap(this.player, this.ghost1, this.ghostfrontOverlap, null, this);
-        this.physics.add.overlap(this.player, this.ghost2, this.ghostsideOverlap, null, this);
-        this.physics.add.overlap(this.player, this.bat1, this.batsideOverlap, null, this);
-        this.physics.add.overlap(this.player, this.bat2, this.batfrontOverlap, null, this);
-        this.physics.add.overlap(this.player, this.bat3, this.batfrontOverlap, null, this);
-        this.physics.add.overlap(this.player, this.bat4, this.batsideOverlap, null, this);
+        this.physics.add.overlap(this.player, this.ghost1, this.ghostOverlap, null, this);
+        this.physics.add.overlap(this.player, this.ghost2, this.ghostOverlap, null, this);
+        this.physics.add.overlap(this.player, this.bat1, this.batOverlap, null, this);
+        this.physics.add.overlap(this.player, this.bat2, this.batOverlap, null, this);
+        this.physics.add.overlap(this.player, this.bat3, this.batOverlap, null, this);
+        this.physics.add.overlap(this.player, this.bat4, this.batOverlap, null, this);
+        this.physics.add.overlap(this.player, this.bat5, this.batOverlap, null, this);
 
-        //item layer callback
-        this.itemLayer.setTileIndexCallback(1, this.removeItem, this);
-        this.itemLayer.setTileIndexCallback(2, this.removeItem, this);
+         //hit collectable
+         this.physics.add.overlap(this.player, this.pumpkin1, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin2, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin3, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.pumpkin4, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.sweet1, this.collectItem, null, this);
+         this.physics.add.overlap(this.player, this.sweet2, this.collectItem, null, this);
       
       
         this.player.setCollideWorldBounds(true);
+
+
+        //hearts
+        this.heart1 = this.add
+        .image(30, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart2 = this.add
+        .image(70, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart3 = this.add
+        .image(110, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+
+      if (window.heart >= 3) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+        this.heart3.setVisible(true);
+      } 
+       else if (window.heart == 2) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+      } 
+       else if (window.heart == 1) {
+        this.heart1.setVisible(true);
+      } 
       
           // create the arrow keys
           this.cursors = this.input.keyboard.createCursorKeys();
@@ -171,11 +225,15 @@ this.anims.create({
       
           this.physics.add.collider(this.player, this.fenceLayer)
           this.physics.add.collider(this.player, this.obstacleLayer)
-          this.physics.add.collider(this.itemLayer, this.player)
+
+          console.log('item: ', window.score);
+
         
     }
 
     update() {
+
+      this.physics.moveToObject(this.bat4, this.player, 50, 4000)
 
         if(
             this.player.x > 47 &&
@@ -258,7 +316,7 @@ this.anims.create({
 moveLeftRight3() {
   console.log('moveLeftRight')
   this.tweens.timeline({
-      targets: this.bat4,
+      targets: this.bat5,
       loop: -1, // loop forever
       ease: 'Linear',
       duration: 3500,
@@ -340,39 +398,68 @@ moveUpDown3() {
       }
 
       // Function hit ghost and bat
-      ghostfrontOverlap() {
-        console.log( "ghostfront overlap player");
-        this.scene.start("gameover");
+      ghostOverlap(player,ghost) {
+        console.log( "ghost overlap player");
+                window.heart--;
+
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    ghost.disableBody (true, true);
+    // this.hitSound.play();
+    this.cameras.main.shake(200);
       }
 
-      ghostsideOverlap() {
-          console.log( "ghostsideoverlap player");
-          this.scene.start("gameover");
+      batOverlap(player,bat) {
+        console.log( "bat overlap player");
+                window.heart--;
+
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+    bat.disableBody (true, true);
+    // this.hitSound.play();
+    this.cameras.main.shake(200);
       }
 
-      batfrontOverlap() {
-        console.log( "batfrontoverlap player");
-        this.scene.start("gameover");
-    }
+      poisonOverlap(player,poison) {
+        console.log( "poison overlap player");
+                window.heart--;
 
-    batsideOverlap() {
-      console.log( "batsideoverlap player");
-      this.scene.start("gameover");
-  }
+         if (window.heart == 2) {
+         this.heart3.setVisible(false);
+       } else if (window.heart == 1) {
+         this.heart2.setVisible(false);
+       } else if (window.heart == 0) {
+         this.heart1.setVisible(false);
+         console.log("you are dead");
+         this.scene.start("gameover");
+       }
+       poison.disableBody (true, true);
+    // this.hitSound.play();
+    this.cameras.main.shake(200);
+      }
 
-    poisonOverlap() {
-      console.log( "batsideoverlap player");
-      this.scene.start("gameover");
-  }
 
 
-      removeItem(player, item) {
-        console.log('hit item', item.index );
-        if (item.index !== 1) return;
-        this.itemLayer.removeTileAt(item.x, item.y); // remove the item
-
-        return false;
-    }
+  collectItem (player,item)
+  {
+  console.log("item collected");
+  item.disableBody(true,true);
+  this.collectsound.play();
+   }
 
  
   }

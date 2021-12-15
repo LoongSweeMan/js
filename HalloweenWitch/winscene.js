@@ -1,7 +1,7 @@
-class gameover extends Phaser.Scene {
+class winscene extends Phaser.Scene {
     constructor() {
       super(
-        "gameover"
+        "winscene"
       );
   
       // Put global variable here
@@ -11,22 +11,22 @@ class gameover extends Phaser.Scene {
   
     preload() {
       // intro
-      this.load.image('gameover1', 'assets/gameover1.png');
+      this.load.image('win1', 'assets/win1.png');
   
     }
   
     create() {
-        console.log("*** gameover");
+        console.log("*** win");
 
         window.music.stop();
 
-        this.music = this.sound.add("gameover", {
+        this.music = this.sound.add("win", {
        loop: true,
        }).setVolume(0.3);this.music.play();
 
     // Add image and detect spacebar keypress
 
-    this.add.image(0, 0, 'gameover1').setOrigin(0, 0);
+    this.add.image(0, 0, 'win1').setOrigin(0, 0);
 
   
     

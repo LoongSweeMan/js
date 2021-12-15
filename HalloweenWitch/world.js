@@ -8,6 +8,7 @@ class world extends Phaser.Scene {
   // incoming data from scene below
   init(data) {
     this.playerPos = data.playerPos;
+    this.score = data.score;
   }
 
   preload() {
@@ -24,6 +25,7 @@ class world extends Phaser.Scene {
     this.load.image("plants32", "assets/plants.png");
     this.load.image("scenery32", "assets/Scenery.png");
     this.load.image("tree32", "assets/tree.png");
+    this.load.image("heart", "assets/heart.png");
 
     // this.load.atlas('left', 'assets/left.png', 'assets/left.json');
     // this.load.atlas('right', 'assets/right.png', 'assets/right.json');
@@ -33,6 +35,17 @@ class world extends Phaser.Scene {
 
   create() {
     console.log("*** world scene");
+    console.log("life: ", window.heart);
+
+    //background_sound
+    window.music = this.sound
+    .add("bgmusic", {
+   loop: true,
+   }).setVolume(0.3);window.music.play();
+
+   //collectsound
+   this.collectsound = this.sound.add("collect");
+
 
     //Step 3 - Create the map from main
     let map = this.make.tilemap({key:"world"});
@@ -74,6 +87,7 @@ class world extends Phaser.Scene {
 
   this.physics.world.bounds.width = this.groundLayer.width;
   this.physics.world.bounds.height = this.groundLayer.height;
+  
 
   // this.player=this.physics.add.sprite(
   //   1108,
@@ -92,6 +106,44 @@ class world extends Phaser.Scene {
 
 
   this.player.setCollideWorldBounds(true);
+
+        //hearts
+        this.heart1 = this.add
+        .image(30, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart2 = this.add
+        .image(70, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+        this.heart3 = this.add
+        .image(110, 25, "heart")
+        .setScrollFactor(0)
+        .setVisible(false);
+
+      if (window.heart >= 3) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+        this.heart3.setVisible(true);
+      } 
+       else if (window.heart == 2) {
+        this.heart1.setVisible(true);
+        this.heart2.setVisible(true);
+      } 
+       else if (window.heart == 1) {
+        this.heart1.setVisible(true);
+      } 
+
+        // this text will show the score
+      //   console.log('score: ', this.score);
+      //   this.scoreText = this.add.text(20, 440, '0', {
+      //     fontSize: '20px',
+      //     fill: '#ff0000'
+      // });
+      // fix the text to the camera
+      // this.scoreText.setScrollFactor(0);
+      // this.scoreText.visible = true;
+  
     // Add time event / movement here
 
     // get the tileIndex number in json, +1
@@ -117,6 +169,7 @@ class world extends Phaser.Scene {
     this.physics.add.collider(this.player, this.treeLayer)
     this.physics.add.collider(this.player, this.buildingLayer)
     this.physics.add.collider(this.player, this.fenceLayer)
+
   } /////////////////// end of create //////////////////////////////
 
   update() {
@@ -148,6 +201,16 @@ class world extends Phaser.Scene {
     this.room3()
   }
 
+  if(
+    this.player.x > 816 &&
+    this.player.x < 880 &&
+    this.player.y > 16 &&
+    this.player.y < 17
+  ) {
+    console.log("Jump to winscene");
+    this.scene.start("winscene");
+  }
+
   if(this.cursors.left.isDown){
       this.player.setVelocityX(-170);
       this.player.anims.play("left",true);
@@ -169,6 +232,8 @@ class world extends Phaser.Scene {
   }
 } /////////////////// end of update //////////////////////////////
 
+
+
   // Function to jump to room1
   room1(player, tile) {
     console.log("room1 function");
@@ -177,7 +242,7 @@ class world extends Phaser.Scene {
     playerPos.y = 859;
     playerPos.dir = "up";
 
-    this.scene.start("room1", {playerPos: playerPos});
+    this.scene.start("room1", {playerPos: playerPos, score : this.score});
   }
 
   room2(player, tile) {
@@ -187,7 +252,7 @@ class world extends Phaser.Scene {
     playerPos.y = 883;
     playerPos.dir = "up";
 
-    this.scene.start("room2", {playerPos: playerPos});
+    this.scene.start("room2", {playerPos: playerPos, score : this.score});
   }
 
   room3(player, tile) {
@@ -197,6 +262,26 @@ class world extends Phaser.Scene {
     playerPos.y = 351;
     playerPos.dir = "right";
 
-    this.scene.start("room3", {playerPos: playerPos});
+    this.scene.start("room3", {playerPos: playerPos, score : this.score});
   }
+
+        // Function hit ghost
+        ghostOverlap(player,ghost) {
+          console.log( "ghost overlap player");
+                  window.heart--;
+  
+           if (window.heart == 2) {
+           this.heart3.setVisible(false);
+         } else if (window.heart == 1) {
+           this.heart2.setVisible(false);
+         } else if (window.heart == 0) {
+           this.heart1.setVisible(false);
+           console.log("you are dead");
+           this.scene.start("gameover");
+         }
+      ghost.disableBody (true, true);
+      // this.hitSound.play();
+      this.cameras.main.shake(200);
+        }
+
 } //////////// end of class world ////////////////////////
